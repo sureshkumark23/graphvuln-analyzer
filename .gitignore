@@ -11,6 +11,10 @@ build/
 
 # Environment variables — NEVER push API keys
 .env
+backend/venv/
+**/__pycache__/
+*.pyc
+
 
 # Database cache
 *.db
