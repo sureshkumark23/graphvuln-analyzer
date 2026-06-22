@@ -1,5 +1,3 @@
-import cytoscape from 'cytoscape';
-import dagre from 'cytoscape-dagre';
 import React, { useEffect, useRef } from 'react';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
@@ -7,7 +5,7 @@ import dagre from 'cytoscape-dagre';
 cytoscape.use(dagre);
 
 function nodeColor(data) {
-  if (data.has_cve)       return '#ef4444';
+  if (data.has_cve)        return '#ef4444';
   if (data.risk_score > 0) return '#f97316';
   return '#22c55e';
 }
@@ -20,7 +18,7 @@ function nodeSize(data) {
 }
 
 function GraphView({ nodes, edges, selected, setSelected }) {
-  const cyRef = useRef(null);
+  const cyRef      = useRef(null);
   const cyInstance = useRef(null);
 
   useEffect(() => {
@@ -29,7 +27,8 @@ function GraphView({ nodes, edges, selected, setSelected }) {
     const elements = [
       ...nodes.map(n => ({
         data: {
-          id: n.id, label: n.name,
+          id:    n.id,
+          label: n.name,
           ...n,
           color: nodeColor(n),
           size:  nodeSize(n)
@@ -47,16 +46,16 @@ function GraphView({ nodes, edges, selected, setSelected }) {
         {
           selector: 'node',
           style: {
-            'background-color':  'data(color)',
-            'width':             'data(size)',
-            'height':            'data(size)',
-            'label':             'data(label)',
-            'color':             '#e2e8f0',
-            'font-size':         9,
-            'text-valign':       'bottom',
-            'text-margin-y':     4,
-            'border-width':      1,
-            'border-color':      '#334155',
+            'background-color': 'data(color)',
+            'width':            'data(size)',
+            'height':           'data(size)',
+            'label':            'data(label)',
+            'color':            '#e2e8f0',
+            'font-size':        9,
+            'text-valign':      'bottom',
+            'text-margin-y':    4,
+            'border-width':     1,
+            'border-color':     '#334155',
           }
         },
         {
@@ -79,23 +78,19 @@ function GraphView({ nodes, edges, selected, setSelected }) {
         }
       ],
       layout: {
-        name:      'dagre',
-        rankDir:   'TB',
-        nodeSep:   40,
-        rankSep:   60,
-        animate:   false,
-        padding:   20,
+        name:    'dagre',
+        rankDir: 'TB',
+        nodeSep: 40,
+        rankSep: 60,
+        animate: false,
+        padding: 20,
       },
-      backgroundColor: '#0f172a',
     });
 
-    // Click node → show detail
     cyInstance.current.on('tap', 'node', evt => {
-      const d = evt.target.data();
-      setSelected(d);
+      setSelected(evt.target.data());
     });
 
-    // Click background → deselect
     cyInstance.current.on('tap', evt => {
       if (evt.target === cyInstance.current) setSelected(null);
     });
@@ -105,7 +100,6 @@ function GraphView({ nodes, edges, selected, setSelected }) {
     };
   }, [nodes, edges]);
 
-  // Highlight selected node
   useEffect(() => {
     if (!cyInstance.current || !selected) return;
     cyInstance.current.nodes().forEach(n => {
